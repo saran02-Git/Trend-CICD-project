@@ -35,7 +35,7 @@ pipeline {
 
         stage('Test (optional)') {
             steps {
-                dir('node-ci-demo') {
+                dir('app') {
                     sh '''
                         if grep -q '"test"' package.json; then
                           npm test
