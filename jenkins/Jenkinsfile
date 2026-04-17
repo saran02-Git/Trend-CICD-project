@@ -1,88 +1,36 @@
 pipeline {
     agent any
 
-    options {
-        timestamps()
-        disableConcurrentBuilds()
-    }
-
     environment {
-        APP_PORT = '3000'
-        NODE_ENV = 'production'
-        APP_DIR  = '/var/lib/jenkins/trend-cicd-app'
+        DOCKER_IMAGE = "saran0702/trend-app:v1"
     }
 
     stages {
-        stage('Clean Workspace') {
-            steps {
-                deleteDir()
-            }
-        }
-
         stage('Checkout') {
             steps {
                 checkout scm
             }
         }
 
-        stage('Install Dependencies') {
+        stage('Docker Build') {
             steps {
-                dir('app') {
-                    sh 'npm install'
-                }
+                sh 'docker build -t $DOCKER_IMAGE ./app'
             }
         }
 
-        stage('Test (optional)') {
+        stage('Docker Push') {
             steps {
-                dir('app') {
-                    sh '''
-                        if grep -q '"test"' package.json; then
-                          npm test
-                        else
-                          echo "No tests, skipping"
-                        fi
-                    '''
-                }
-            }
-        }
-
-        stage('Deploy') {
-            steps {
-                sh '''
-                    mkdir -p "$APP_DIR"
-
-                    rsync -a --delete ./app/ "$APP_DIR/"
-
-                    cd "$APP_DIR"
-
-                    # kill old app if running
-                    if pgrep -f "node index.js" > /dev/null; then
-                      pkill -f "node index.js"
-                    fi
-
-                    # start app
-                    JENKINS_NODE_COOKIE=dontKillMe nohup env PORT=$APP_PORT NODE_ENV=$NODE_ENV node index.js > app.log 2>&1 &
-                '''
-            }
-        }
-
-        stage('Verify') {
-            steps {
-                sh '''
-                    sleep 5
-                    curl -f http://localhost:$APP_PORT || exit 1
-                '''
+                sh 'docker push $DOCKER_IMAGE'
             }
         }
     }
 
     post {
         success {
-            echo "SUCCESS ✅ App running on port 3000"
+            echo "SUCCESS ✅ Image pushed to DockerHub"
         }
         failure {
             echo "FAILED ❌ Check logs"
+        }
     }
-}
 }
