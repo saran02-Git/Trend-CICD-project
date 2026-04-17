@@ -1,92 +1,89 @@
-DevOps Practice Project – Dist Directory
+# Node.js App CI/CD – Jenkins, Docker, Terraform, AWS
 
-This repository contains the production-ready build files (dist folder) for DevOps practice and deployment exercises.
+Project Overview:
 
-It is intentionally structured to help learners focus on CI/CD pipelines, hosting, containerization, and infrastructure setup rather than application development.
+This project demonstrates a complete CI/CD pipeline to build, containerize, and deploy a Node.js web application to an AWS EC2 instance using Jenkins, Docker, and Terraform.
+The focus is on CI/CD implementation, infrastructure automation, deployment, and basic observability of the system.
 
-📁 What This Repository Contains
+## What I Learned:
 
-dist/ – Compiled and production-ready static files
+Built this to practice real-world DevOps workflows end-to-end:
+Jenkins pipeline automation
+Terraform infrastructure provisioning
+Docker containerization
+AWS EC2 deployment
+Monitoring system performance using Grafana dashboards
 
-HTML
+Prerequisites:
 
-CSS
+AWS account with IAM permissions
+GitHub account
+DockerHub account
+Jenkins (EC2 or local VM)
+Terraform installed and configured with AWS credentials
+Docker installed locally and on the Jenkins agent
+Node.js runtime
 
-JavaScript
+---
 
-Assets (images, fonts, etc.)
+Architecture:
 
-These files are ready to deploy to:
+GitHub → Jenkins → Docker Build → AWS EC2 → Application (Port 3000) → Grafana (real-time metrics visualization via Prometheus)
 
-Web servers (Nginx / Apache)
+---
 
-Cloud platforms (AWS S3, Azure Blob, GCP Storage)
+Workflow:
 
-Containerized environments (Docker + Nginx)
+1. Code pushed to GitHub
+2. Jenkins triggered (webhook or polling)
+3. Jenkins pipeline
+   Checkout code
+   Install dependencies
+   Build Docker image
+   Push image
+4. Terraform provisions EC2 instance and security groups
+5. Jenkins deploys the container to EC2
+6. Application runs on port 3000
+7. System and workload metrics are collected and visualized in Grafana dashboards
 
-Kubernetes clusters
+## Project Structure :
 
-CI/CD pipeline demonstrations
+app/        - Node.js application
+jenkins/    - Jenkins pipeline configuration
+terraform/  - Infrastructure as Code
+k8s/        - Kubernetes configuration for monitoring setup
 
-🎯 Purpose of This Repository
+Deployment Files
+Jenkinsfile → CI/CD pipeline definition
+Dockerfile → Application container build
+terraform/main.tf → Infrastructure provisioning
 
-This repository is designed for:
+Application Access
+The application runs on EC2 via Docker:
+http://15.207.106.146:3000/
 
-DevOps beginners
+Monitoring & Verification:
+Grafana dashboards provide real-time visibility into CPU usage, memory consumption, and network activity
+Jenkins logs are used to verify pipeline stages including build, image creation, and deployment
 
-CI/CD practice
+## Challenges Faced:
 
-Deployment pipeline testing
+Debugging slow or failed Git pushes
+Accidentally committing large Terraform provider files (~700MB)
+Handling GitHub file size limitations and repository cleanup
+Configuring .gitignore correctly for Terraform directories
+Setting up and integrating monitoring with Grafana
 
-Docker & Kubernetes deployment exercises
+Outcome
 
-Web server configuration practice
+Fully functional CI/CD pipeline
+Automated Docker-based deployment to AWS EC2
+Application successfully running and accessible on port 3000
+Monitoring dashboards implemented for observing system performance
 
-Reverse proxy and load balancer setup
+## Conclusion
 
-The goal is to simulate real-world deployment scenarios using already built application files.
+This project demonstrates practical DevOps capabilities including CI/CD pipeline design, infrastructure automation using Terraform, containerized deployments with Docker, and cloud hosting on AWS EC2.
+It also reflects hands-on experience in debugging real-world issues and implementing monitoring using Grafana for better system visibility.
 
-❓ Why is there NO package.json?
-
-You may notice that this repository does not include:
-
-package.json
-
-node_modules
-
-Source code (src/)
-
-Build tools configuration
-
-✅ Reason:
-
-This repository only contains the final production build output (dist), not the development source code.
-
-In a typical project:
-
-Developers write source code.
-
-The project is built using tools like:
-
-Node.js
-
-Webpack
-
-Vite
-
-React (or other frameworks)
-
-A dist/ folder is generated.
-
-Only the production build is deployed to servers.
-
-This repository represents step 4 only.
-
-Since this is already the compiled output:
-
-No dependencies are required
-
-No build process is required
-
-No package.json is needed
-Testing webhooks
+That’s my pipeline story — thanks for checking it out.
