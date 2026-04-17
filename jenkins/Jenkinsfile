@@ -2,7 +2,7 @@ pipeline {
     agent any
 
     environment {
-        DOCKER_IMAGE = "saran0702/trend-app:v1"
+        DOCKER_IMAGE = "saran0702/trend-app:v2"
     }
 
     stages {
