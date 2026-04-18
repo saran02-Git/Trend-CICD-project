@@ -2,13 +2,11 @@ apiVersion: v1
 kind: Service
 metadata:
   name: trend-node-service
-  labels:
-    app: trend-node-app
 spec:
   type: LoadBalancer
   selector:
     app: trend-node-app
   ports:
-    - name: http
+    - protocol: TCP
       port: 80
-      targetPort: 3000
+      targetPort: 3000   #MUST be 3000
