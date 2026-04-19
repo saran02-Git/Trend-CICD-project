@@ -6,6 +6,7 @@ pipeline {
     }
 
     stages {
+
         stage('Checkout') {
             steps {
                 checkout scm
@@ -23,14 +24,25 @@ pipeline {
                 sh 'docker push $DOCKER_IMAGE'
             }
         }
+
+        stage('Deploy to EKS') {
+            steps {
+                sh '''
+                  kubectl apply -f k8s/deployment.yaml
+                  kubectl apply -f k8s/service.yaml
+                  kubectl get pods
+                  kubectl get svc
+                '''
+            }
+        }
     }
 
     post {
         success {
-            echo "SUCCESS ✅ Image pushed to DockerHub"
+            echo "SUCCESS Build, Push & Deploy completed"
         }
         failure {
-            echo "FAILED ❌ Check logs"
+            echo "FAILED  Check Jenkins console logs"
         }
     }
 }
