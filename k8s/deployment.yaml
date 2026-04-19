@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
         - name: trend-node-container
-          image: saran0702/trend-app:v2   #fixed
+          image: saran0702/trend-app:latest   #fixed
           imagePullPolicy: Always
           ports:
             - containerPort: 3000         #fixed bro
